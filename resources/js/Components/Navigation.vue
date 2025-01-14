@@ -14,7 +14,6 @@ export default {
                 <div class="relative flex h-16 items-center justify-between">
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
-
                             <Link  :class="['px-3 py-2 rounded-md text-sm font-medium', $page.component === 'Project/Index'
                                 ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white']" :href="route('project.index')">
                                 Projects
