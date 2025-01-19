@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Imports\ProjectImport;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\Console\Command\Command as CommandAlias;
+
 
 class TestCommand extends Command
 {
@@ -28,7 +28,7 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        Excel::import(new ProjectImport(), 'files/project.xlsx', 'public');
+        Excel::import(new ProjectImport(), 'files/projects.xlsx', 'public');
 
         return Command::SUCCESS;
     }

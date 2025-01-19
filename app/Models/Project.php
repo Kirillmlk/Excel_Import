@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    protected $quarded = false;
+    protected $guarded = false;
     protected $table = 'projects';
 }
