@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Type extends Model
 {
-    protected $quarded = false;
+    protected $guarded = false;
     protected $table = 'types';
 }
