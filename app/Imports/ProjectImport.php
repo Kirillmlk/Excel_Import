@@ -3,13 +3,17 @@
 namespace App\Imports;
 
 use App\Factory\ProjectFactory;
+use App\Models\FailedRow;
 use App\Models\Project;
 use App\Models\Type;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Validators\Failure;
 
-class ProjectImport implements ToCollection
+class ProjectImport implements ToCollection, WithHeadingRow, WithValidation, SkipsOnFailure
 {
     /**
      * @param Collection $collection
@@ -20,7 +24,9 @@ class ProjectImport implements ToCollection
 
 
         foreach ($collection as $row) {
-            if (!isset($row['naimenovanie'])) continue;
+            if (!isset($row['naimenovanie'])) {
+                continue;
+            }
 
             $projectFactory = ProjectFactory::make($typesMap, $row);
 
@@ -33,7 +39,7 @@ class ProjectImport implements ToCollection
         }
     }
 
-    private functioN getTypesMap($types): array
+    private function getTypesMap($types): array
     {
         $map = [];
         foreach ($types as $type) {
@@ -41,5 +47,48 @@ class ProjectImport implements ToCollection
         }
 
         return $map;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'tip' => 'required|string',
+            'naimenovanie' => 'required|string',
+            'data_sozdaniia' => 'required|integer',
+            'podpisanie_dogovora' => 'required|integer',
+            'dedlain' => 'nullable|integer',
+            'setevik' => 'nullable|string',
+            'nalicie_autsorsinga' => 'nullable|string',
+            'nalicie_investorov' => 'nullable|string',
+            'sdaca_v_srok' => 'nullable|string',
+            'vlozenie_v_pervyi_etap' => 'nullable|integer',
+            'vlozenie_vo_vtoroi_etap' => 'nullable|integer',
+            'vlozenie_v_tretii_etap' => 'nullable|integer',
+            'vlozenie_v_cetvertyi_etap' => 'nullable|integer',
+            'kolicestvo_ucastnikov' => 'nullable|integer',
+            'kolicestvo_uslug' => 'nullable|integer',
+            'kommentarii' => 'nullable|string',
+            'znacenie_effektivnosti' => 'nullable|numeric',
+        ];
+    }
+
+    public function onFailure(Failure ...$failures)
+    {
+
+        $map = [];
+        foreach ($failures as $failure) {
+            foreach ($failure->errors() as $error) {
+                $map[] = [
+                    'key' => $failure->attribute(),
+                    'row' => $failure->row(),
+                    'message' => $error,
+//                    'task_id' => $this->task->id
+                ];
+            }
+        }
+
+        if (count($map) > 0) FailedRow::insertFailedRows($map);
+
+
     }
 }

@@ -9,4 +9,11 @@ class FailedRow extends Model
 {
     protected $quarded = false;
     protected $table = 'failed_rows';
+
+    private static function insertFailedRows($items)
+    {
+        foreach ($items as $item) {
+            FailedRow::create($item);
+        }
+    }
 }
