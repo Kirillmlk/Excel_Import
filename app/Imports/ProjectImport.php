@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Factory\ProjectFactory;
 use App\Models\FailedRow;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\Type;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
@@ -15,6 +16,17 @@ use Maatwebsite\Excel\Validators\Failure;
 
 class ProjectImport implements ToCollection, WithHeadingRow, WithValidation, SkipsOnFailure
 {
+    private Task $task;
+
+    /**
+     * @param $task
+     */
+    public function __construct($task)
+    {
+        $this->task = $task;
+    }
+
+
     /**
      * @param Collection $collection
      */
@@ -82,12 +94,12 @@ class ProjectImport implements ToCollection, WithHeadingRow, WithValidation, Ski
                     'key' => $this->attributesMap()[$failure->attribute()],
                     'row' => $failure->row(),
                     'message' => $error,
-//                    'task_id' => $this->task->id
+                    'task_id' => 1,
                 ];
             }
         }
 
-        if (count($map) > 0) FailedRow::insertFailedRows($map);
+        if (count($map) > 0) FailedRow::insertFailedRows($map, $this->task);
 
 
     }
