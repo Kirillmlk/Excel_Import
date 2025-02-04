@@ -31,16 +31,16 @@
                 </table>
             </div>
         </div><div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5"></div></div></div>
-<!--        <div>-->
-<!--            <pagination :meta="tasks.meta"></pagination>-->
-<!--        </div>-->
+        <div>
+            <pagination :meta="failedList.meta"></pagination>
+        </div>
     </div>
 </template>
 
 <script>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import {Link} from '@inertiajs/inertia-vue3'
-// import Pagination from "@/Components/Pagination.vue";
+import Pagination from "@/Components/Pagination.vue";
 
 export default {
     name: "Index",
@@ -48,6 +48,7 @@ export default {
 
     components: {
         Link,
+        Pagination
     },
 
     props: [
