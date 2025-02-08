@@ -28,6 +28,7 @@ class ImportStoreRequest extends FormRequest
 
         return [
             'file' => 'required|file',
+            'type' => 'required|integer|in:1,2',
         ];
     }
 }
